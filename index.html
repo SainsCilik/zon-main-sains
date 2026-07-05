@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zon Main Sains - Bijak Belajar</title>
+    <style>
+        body {
+            font-family: 'Comic Sans MS', sans-serif;
+            background-color: #e3f2fd;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .header {
+            text-align: center;
+            color: #1565c0;
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 5px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        .header p {
+            font-size: 1.2rem;
+            color: #555;
+        }
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            width: 100%;
+            max-width: 1000px;
+            padding: 10px;
+        }
+        .game-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+            padding: 25px;
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 3px solid transparent;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .game-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 20px rgba(0,0,0,0.15);
+            border-color: #1976d2;
+        }
+        .game-icon {
+            font-size: 4rem;
+            margin-bottom: 15px;
+        }
+        .game-title {
+            font-size: 1.4rem;
+            color: #1565c0;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .game-desc {
+            font-size: 1rem;
+            color: #666;
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+        .btn-main {
+            background-color: #1976d2;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 12px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: 0.2s;
+        }
+        .btn-main:hover {
+            background-color: #1565c0;
+        }
+        .locked {
+            background-color: #757575 !important;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>🎮 ZON MAIN SAINS 🧬</h1>
+        <p>Koleksi Game Interaktif Sains Rendah (Tahun 1 - 6)</p>
+    </div>
+
+    <div class="grid-container">
+        <!-- GAME 1 -->
+        <div class="game-card">
+            <div>
+                <div class="game-icon">🔍</div>
+                <div class="game-title">Detektif Sains</div>
+                <div class="game-desc">Selesaikan kes misteri eksperimen menggunakan kemahiran Inferens & Ramalan!</div>
+            </div>
+            <a href="game1-detektif/index.html" class="btn-main">MAIN SEKARANG ➔</a>
+        </div>
+
+        <!-- GAME 2 -->
+        <div class="game-card">
+            <div>
+                <div class="game-icon">🧪</div>
+                <div class="game-title">Simulator Makmal</div>
+                <div class="game-desc">Kenali alatan sains & simbol amaran bahaya sebelum makmal meletup!</div>
+            </div>
+            <a href="#" class="btn-main locked">AKAN DATANG 🔒</a>
+        </div>
+
+        <!-- GAME 3 -->
+        <div class="game-card">
+            <div>
+                <div class="game-icon">🐸</div>
+                <div class="game-title">Pengelasan Gergasi</div>
+                <div class="game-desc">Asingkan haiwan, tumbuhan & objek ke dalam kumpulan yang betul dengan pantas!</div>
+            </div>
+            <a href="#" class="btn-main locked">AKAN DATANG 🔒</a>
+        </div>
+
+        <!-- GAME 4 -->
+        <div class="game-card">
+            <div>
+                <div class="game-icon">🔄</div>
+                <div class="game-title">Cabaran Peta Alir</div>
+                <div class="game-desc">Susun urutan kitaran hidup, aliran udara pernafasan, & litar elektrik!</div>
+            </div>
+            <a href="#" class="btn-main locked">AKAN DATANG 🔒</a>
+        </div>
+    </div>
+
+</body>
+</html>
