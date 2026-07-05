@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ms">
 <head>
     <meta charset="UTF-8">
@@ -95,6 +95,24 @@
             margin-top: 20px;
             font-weight: bold;
         }
+        .level-btn {
+            background: #1976d2;
+            color: white;
+            border: none;
+            padding: 15px;
+            width: 100%;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 12px;
+            cursor: pointer;
+            margin-bottom: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: 0.2s;
+        }
+        .level-btn:hover {
+            background: #1565c0;
+            transform: scale(1.02);
+        }
     </style>
 </head>
 <body>
@@ -103,11 +121,16 @@
     <!-- START SCREEN -->
     <div id="start-screen">
         <div style="font-size: 5rem;">🔍</div>
-        <h1 style="color: #1976d2;">Detektif Sains Gergasi</h1>
-        <p style="color: #555; font-size: 1.1rem; max-width: 450px; margin: 0 auto 20px auto;">
-            Sistem telah memilih <b>20 kes rawak</b> daripada 50 fail kes makmal. Gunakan kemahiran Inferens & Ramalan anda untuk menyelesaikan kes!
+        <h1 style="color: #1976d2; margin-bottom: 5px;">Detektif Sains Gergasi</h1>
+        <p style="color: #555; font-size: 1.1rem; max-width: 450px; margin: 0 auto 25px auto;">
+            Sila pilih tahap persekolahan anda. Sistem akan menapis kes bersesuaian dan memilih <b>20 soalan rawak</b> untuk disiasat!
         </p>
-        <button onclick="mulaGame()" style="background: #1976d2; color: white; border: none; padding: 15px 35px; font-size: 1.2rem; font-weight: bold; border-radius: 12px; cursor: pointer; box-shadow: 0 5px 10px rgba(0,0,0,0.15);">MULA MENYIASAT 🚀</button>
+        
+        <div style="max-width: 400px; margin: 0 auto;">
+            <button class="level-btn" style="background: #2e7d32;" onclick="mulaGame(1)">TAHAP 1 (Tahun 1, 2, 3) 🎒</button>
+            <button class="level-btn" style="background: #e65100;" onclick="mulaGame(2)">TAHAP 2 (Tahun 4, 5, 6) 🧠</button>
+            <button class="level-btn" style="background: #7b1fa2;" onclick="mulaGame(3)">CABARAN CAMPURAN (Semua Tahun) 🔥</button>
+        </div>
         <br>
         <a href="../index.html" class="btn-back">⬅️ KEMBALI</a>
     </div>
@@ -116,12 +139,12 @@
     <div id="game-screen" style="display: none;">
         <div class="stats-bar">
             <div>Mata: <span id="score-txt">0</span> ⭐</div>
-            <div>Kes: <span id="progress-txt">1/20</span></div>
+            <div>Misi: <span id="progress-txt">1/20</span></div>
         </div>
 
         <div class="case-box">
             <span style="font-size: 2rem;">📝</span>
-            <div id="case-text">Memuatkan kes makmal...</div>
+            <div id="case-text">Memuatkan fail kes...</div>
         </div>
 
         <div class="options-container" id="options-area"></div>
@@ -133,79 +156,94 @@
     <div id="result-screen" style="display: none;">
         <div style="font-size: 5rem;">🏆</div>
         <h2>Siasatan Selesai!</h2>
-        <p style="font-size: 1.2rem; color: #555;">Tahniah Detektif, markah anda ialah:</p>
+        <p style="font-size: 1.2rem; color: #555;">Tahniah Detektif, markah kejuaraan anda:</p>
         <h1 style="color: #1976d2; font-size: 3.5rem;" id="final-score">0/20</h1>
         <a href="../index.html" class="btn-back">⬅️ KEMBALI KE MENU UTAMA</a>
     </div>
 </div>
 
 <script>
-    // BANK DATA - 50 SOALAN LENGKAP
+    // BANK DATA - 50 SOALAN TERBAHAGI KEPADA TAHAP 1 & TAHAP 2
     const bankKes = [
-        { q: "Pokok P mendapat air tetapi diletakkan di dalam kotak hitam yang gelap. Selepas seminggu, daunnya kuning. Apakah inferens anda?", o: ["Pokok tidak mendapat cahaya matahari untuk buat makanan", "Pokok terlalu banyak mendapat udara", "Kotak hitam itu beracun", "Pokok tidak dipotong daunnya"], c: 0 },
-        { q: "Dua biji ragi dimasukkan ke dalam air suam berisi gula. Selepas 15 minit, air berbuih dan belon di atas botol mengembang. Ramalkan jika gula digantikan dengan garam.", o: ["Belon tetap berkembang besar", "Belon tidak berkembang kerana ragi memerlukan gula untuk aktif", "Botol akan pecah", "Ragi akan membiak dua kali ganda"], c: 1 },
-        { q: "Seketul ais diletakkan di atas meja makmal. Selepas 10 minit, ia bertukar menjadi air. Apakah proses yang berlaku?", o: ["Peleburan akibat menerima haba", "Pembekuan akibat kehilangan haba", "Penyubliman cecair", "Kondensasi udara"], c: 0 },
-        { q: "Seorang murid memakai baju sukan berwarna hitam di padang sekolah pada waktu tengah hari yang terik. Dia terasa sangat panas. Kenapa?", o: ["Warna hitam memantulkan haba matahari", "Warna hitam menyerap haba dengan baik", "Baju hitam kainnya tebal", "Baju hitam menghalang angin bertiup"], c: 1 },
-        { q: "Akar sepasang pokok herba dipotong, kemudian pokok itu ditanam semula ke dalam tanah. Selepas 3 hari, pokok itu layu dan mati. Berikan inferens.", o: ["Pokok mati kerana tiada daun", "Akar penting untuk menyerap air dan nutrien dari tanah", "Tanah itu terlalu kering", "Pokok layu sebab terkejut"], c: 1 },
-        { q: "Ramalkan apa yang berlaku kepada haiwan di bumi jika semua tumbuhan di dunia ini mati tiba-tiba.", o: ["Haiwan akan makan tanah", "Haiwan akan mati kerana kehilangan sumber makanan dan oksigen", "Haiwan karnivor akan hidup selamanya", "Haiwan akan bertukar menjadi tumbuhan"], c: 1 },
-        { q: "Satu eksperimen menunjukkan mentol menyala lebih terang apabila bilangan sel kering ditambah dalam litar siri. Ramalkan jika kita menambah 5 biji mentol lagi tanpa menambah sel kering.", o: ["Mentol menyala semakin malap", "Mentol menyala semakin terang", "Sel kering akan meletup", "Litar akan terbakar"], c: 0 },
-        { q: "Dua ekor tikus diletakkan di dalam sebuah bekas kedap udara yang ditutup rapat. Selepas 2 jam, tikus-tikus itu mati. Apakah inferensnya?", o: ["Tikus mati kekurangan makanan", "Tikus mati kerana kehabisan oksigen untuk bernafas", "Bekas itu terlalu sempit", "Tikus bergaduh sesama sendiri"], c: 1 },
-        { q: "Paku besi dibiarkan di bawah hujan selama seminggu lalu bertukar warna menjadi perang kemerahan. Apakah inferens anda?", o: ["Paku telah melebur", "Paku telah mengalami pengaratan akibat air dan oksigen", "Paku dicat oleh seseorang", "Paku bertukar menjadi tembaga"], c: 1 },
-        { q: "Ramalkan warna kertas litmus biru apabila dimasukkan ke dalam jus limau nipis.", o: ["Kekal warna biru", "Bertukar menjadi warna merah", "Bertukar menjadi warna hijau", "Menjadi putih lutsinar"], c: 1 },
-        { q: "Sudu besi dan sudu plastik diletakkan di dalam secawan air panas. Selepas 3 minit, sudu besi terasa sangat panas tetapi sudu plastik tidak. Kenapa?", o: ["Besi ialah konduktor haba yang baik, plastik ialah penebat haba", "Plastik menyerap haba lebih cepat daripada besi", "Sudu besi saiznya lebih besar", "Air panas hanya menyukai sudu besi"], c: 0 },
-        { q: "Sebuah kereta mainan bergerak lebih jauh di atas lantai jubin berbanding di atas permaidani berbulu. Berikan inferens.", o: ["Lantai jubin mempunyai daya geseran yang lebih rendah", "Permaidani tiada graviti", "Kereta mainan tidak suka permaidani", "Lantai jubin menolak kereta dengan magnet"], c: 0 },
-        { q: "Seekor haiwan mempunyai bulu yang sangat tebal dan lapisan lemak yang tebal di bawah kulitnya. Ramalkan di manakah habitat semula jadi haiwan ini.", o: ["Kawasan gurun pasir yang kering", "Kawasan kutub yang sangat sejuk", "Hutan hujan tropika", "Kawasan paya bakau"], c: 1 },
-        { q: "Pokok semalu menguncupkan daunnya apabila disentuh dengan jari. Apakah inferens bagi tindakan ini?", o: ["Pokok semalu sedang tidur", "Pokok semalu bergerak balas terhadap rangsangan untuk melindungi diri", "Daun pokok semalu sangat rapuh", "Pokok semalu tidak suka disentuh"], c: 1 },
-        { q: "Pemerhatian menunjukkan air laut semakin berkurangan di kawasan pantai sebelum gelombang tsunami gergasi datang. Ramalkan apa yang patut dilakukan penduduk pantai.", o: ["Pergi mengumpul ikan yang terdampar", "Lari bertindak segera ke kawasan yang lebih tinggi dan selamat", "Duduk di pantai mengambil gambar", "Masuk ke dalam bot masing-masing"], c: 1 },
-        { q: "Air di dalam gelas yang berisi ais mempunyai titisan air di bahagian luar gelas. Dari mana datangnya air itu?", o: ["Air bocor dari dalam gelas", "Kondensasi wap air di udara apabila menyentuh permukaan gelas yang sejuk", "Ais melimpah keluar", "Udara bertukar menjadi ais"], c: 1 },
-        { q: "Sebiji bola tenis dan seketul batu bata dilepaskan pada ketinggian yang sama. Batu bata mencecah tanah dahulu. Apakah inferensnya?", o: ["Batu bata ditarik oleh graviti lebih kuat kerana jisimnya lebih besar", "Bola tenis melayang sendiri", "Batu bata bergerak aktif", "Bumi tidak suka bola tenis"], c: 0 },
-        { q: "Satu penyiasatan mendapati yis tidak berkembang apabila diletakkan di dalam air yang mendidih. Berikan inferens.", o: ["Air mendidih terlalu manis", "Suhu yang terlalu tinggi telah membunuh mikroorganisma (yis)", "Yis bertukar menjadi tepung", "Yis melarikan diri"], c: 1 },
-        { q: "Ramalkan apa yang berlaku kepada bayang-bayang sebatang tiang jika matahari berada tepat di atas kepala pada jam 12 tengah hari.", o: ["Bayang-bayang menjadi sangat panjang ke arah barat", "Bayang-bayang menjadi paling pendek atau berada tepat di bawah tiang", "Tiada bayang-bayang langsung di dunia", "Bayang-bayang bertukar warna hijau"], c: 1 },
-        { q: "Seutas tali getah ditarik panjang lalu dilepaskan. Ia kembali ke bentuk asal. Apakah sifat bahan ini?", o: ["Kekenyalan", "Kerapuhan", "Konduktor", "Ketelusan"], c: 0 },
-        { q: "Tumbuhan X mempunyai buah yang berbulu halus, ringan, dan mempunyai ruang udara di dalamnya. Ramalkan cara agen pencaran buah ini.", o: ["Melalui haiwan", "Melalui air", "Melalui angin", "Mekanisme letupan"], c: 2 },
-        { q: "Satu eksperimen menunjukkan bahawa minyak yang dituangkan di atas permukaan air di dalam akuarium menyebabkan ikan mati selepas beberapa jam. Inferenskan.", o: ["Lapisan minyak menghalang oksigen dari udara larut ke dalam air", "Ikan makan minyak tersebut", "Minyak menurunkan suhu air", "Ikan menjadi terlalu licin"], c: 0 },
-        { q: "Planet Utarid mengambil masa paling singkat untuk mengelilingi Matahari berbanding planet lain. Kenapa?", o: ["Sebab Utarid planet paling besar", "Sebab orbit Utarid paling dekat dengan Matahari", "Sebab Utarid bergerak paling laju", "Sebab Utarid mempunyai banyak bulan"], c: 1 },
-        { q: "Ramalkan apa yang berlaku kepada tempoh ayunan satu bandul jika panjang tali bandul itu ditambah.", o: ["Tempoh ayunan menjadi semakin cepat", "Tempoh ayunan menjadi semakin perlahan / panjang", "Bandul akan berhenti serta-merta", "Tali bandul akan putus secara automatik"], c: 1 },
-        { q: "Sebiji botol kaca yang diisi penuh dengan air dipasang penutup dengan ketat, lalu diletakkan di dalam bahagian sejuk beku (freezer). Keesokan harinya, botol itu pecah. Inferenskan.", o: ["Air mengecut apabila membeku", "Air mengembang saiznya apabila bertukar menjadi ais", "Kaca menjadi lembut dalam peti sejuk", "Peti sejuk menolak botol tersebut"], c: 1 },
-        { q: "Seorang pekebun mendapati pokok herba yang ditanam rapat-rapat tumbuh tinggi dan kurus berbanding pokok yang ditanam jarak-jarak. Kenapa?", o: ["Pokok bersaing hebat untuk mendapatkan cahaya matahari", "Pokok yang rapat saling berkongsi daun", "Pekebun lupa menyiram pokok yang rapat", "Pokok kurus lebih sihat"], c: 0 },
-        { q: "Kain tuala menyerap air dengan banyak, manakala kain sutera hanya menyerap sedikit air. Apakah inferens anda?", o: ["Kain tuala mempunyai keupayaan menyerap air yang lebih tinggi", "Kain sutera kalis air sepenuhnya", "Kain tuala diperbuat daripada besi", "Kain sutera tidak mempunyai benang"], c: 0 },
-        { q: "Ramalkan apakah yang berlaku kepada populasi beluncas jika bilangan burung (pemangsa beluncas) di taman itu berkurangan secara mendadak.", o: ["Populasi beluncas akan berkurangan", "Populasi beluncas akan meningkat dengan cepat", "Beluncas akan bertukar menjadi burung", "Beluncas akan berpindah ke taman lain"], c: 1 },
-        { q: "Satu mentol dalam litar selari terbakar, tetapi mentol yang lain masih menyala. Mengapa situasi ini berlaku?", o: ["Sebab tenaga elektrik melompat", "Sebab dalam litar selari, arus elektrik mempunyai lebih daripada satu laluan", "Sebab mentol lain menggunakan bateri berbeza", "Sebab mentol yang terbakar itu tidak penting"], c: 1 },
-        { q: "Apabila cuka dititiskan ke atas kapur tulis, buih-buih gas terhasil dengan cepat. Apakah inferens anda?", o: ["Tindak balas kimia antara asid (cuka) dan kalsium karbonat (kapur) membebaskan gas", "Kapur tulis itu sedang mencair", "Cuka itu sebenarnya air panas", "Kapur tulis mengandungi sabun"], c: 0 },
-        { q: "Sebiji belon yang ditiup diletakkan di bawah cahaya matahari terik. Selepas 30 minit, belon itu meletup. Kenapa?", o: ["Udara di dalam belon mengecut", "Udara di dalam belon menerima haba dan mengembang", "Cahaya matahari memotong getah belon", "Belon menjadi terlalu sejuk"], c: 1 },
-        { q: "Satu kawasan hutan telah ditebang habis untuk pembinaan perumahan. Ramalkan kesan jangka panjang kepada alam sekitar kawasan itu.", o: ["Suhu kawasan sekitar menjadi lebih sejuk", "Kejadian banjir kilat dan tanah runtuh mudah berlaku", "Bilangan haiwan liar bertambah", "Udara menjadi semakin segar"], c: 1 },
-        { q: "Dua buah bekas, satu berwarna putih dan satu berwarna hitam diisi air dengan suhu yang sama, lalu dijemur. Selepas 1 jam, air dalam bekas hitam lebih panas. Kenapa?", o: ["Permukaan hitam menyerap haba lebih baik daripada permukaan putih", "Bekas putih memancarkan haba ke dalam air", "Bekas hitam diperbuat daripada api", "Bekas putih bocor haba"], c: 0 },
-        { q: "Ramalkan rasa sejenis buah sekiranya ia menukarkan kertas litmus merah menjadi biru.", o: ["Rasanya sangat masam", "Rasanya pahit atau beralkali (seperti sabun)", "Rasanya tawar", "Rasanya pedas"], c: 1 },
-        { q: "Apabila sebatang rod magnet didekatkan dengan sekumpulan paku pakis besi, paku-paku itu melekat pada hujung magnet. Berikan inferens.", o: ["Hujung magnet (kutub) mempunyai daya magnet yang paling kuat", "Paku pakis besi mengandungi gam", "Magnet itu sangat melekit", "Paku besi menolak magnet"], c: 0 },
-        { q: "Satu rantaian makanan: Padi ➔ Belalang ➔ Katak ➔ Ular. Ramalkan apa yang berlaku kepada populasi belalang jika semua katak ditangkap.", o: ["Populasi belalang akan berkurangan", "Populasi belalang akan meningkat", "Belalang akan mula makan ular", "Belalang akan bertukar menjadi katak"], c: 1 },
-        { q: "Cacing tanah keluar ke permukaan tanah dengan banyak selepas hujan lebat. Mengapa cacing berbuat demikian?", o: ["Cacing ingin mandi air hujan", "Tanah dipenuhi air menyebabkan cacing kekurangan oksigen untuk bernafas di dalam tanah", "Cacing ingin mencari makanan di atas jalan", "Cacing takut akan petir"], c: 1 },
-        { q: "Ramalkan apakah yang akan berlaku jika dua kutub magnet yang sama (Utara dan Utara) didekatkan antara satu sama lain.", o: ["Magnet akan menarik satu sama lain dengan kuat", "Magnet akan menolak satu sama lain", "Magnet akan kehilangan kuasanya", "Magnet akan melebur"], c: 1 },
-        { q: "Satu blok kayu dan satu blok besi yang sama saiz dimasukkan ke dalam air. Blok kayu terapung, manakala blok besi tenggelam. Berikan inferens.", o: ["Kayu lebih tumpat daripada air, besi kurang tumpat", "Kayu kurang tumpat daripada air, manakala besi lebih tumpat daripada air", "Besi lebih berat daripada kayu", "Kayu mempunyai magnet udara"], c: 1 },
-        { q: "Sebatang sudu perak berkilat menjadi pudar dan hitam setelah dibiarkan lama di dalam almari dapur. Apakah inferens anda?", o: ["Perak bertukar menjadi arang", "Perak bertindak balas dengan gas sulfur di udara (pengaratan/pencemaran permukaan)", "Sudu itu telah tamat tempoh", "Ada orang mengecat sudu itu"], c: 1 },
-        { q: "Tumbuhan di kawasan gurun mempunyai daun yang diubah suai menjadi duri tajam. Apakah inferens bagi ciri khas ini?", o: ["Untuk mengumpul air hujan lebih banyak", "Untuk mengurangkan kehilangan air melalui proses penyejatan/transpirasi", "Untuk menarik perhatian serangga", "Supaya tumbuhan nampak cantik"], c: 1 },
-        { q: "Ramalkan apa yang berlaku kepada bayang-bayang jika sumber cahaya didekatkan dengan objek.", o: ["Saiz bayang-bayang menjadi semakin kecil", "Saiz bayang-bayang menjadi semakin besar", "Bayang-bayang hilang serta-merta", "Bayang-bayang bertukar arah"], c: 1 },
-        { q: "Susunan radas menunjukkan air naik di dalam tiub kapilari apabila dipanaskan. Mengapa situasi ini berlaku?", o: ["Cecair mengecut apabila menerima haba", "Cecair mengembang apabila menerima haba", "Air mendidih melompat", "Tiub kapilari menjadi pendek"], c: 1 },
-        { q: "Ramalkan rasa cecair yang mempunyai nilai pH 7.", o: ["Sangat masam", "Pahit", "Tawar / Tiada rasa (Neutral)", "Manis melebih-lebih"], c: 2 },
-        { q: "Ikan paus kerap timbul di permukaan air dan memancutkan air dari kepalanya. Kenapa ikan paus berbuat demikian?", o: ["Ikan paus sedang bermain air", "Ikan paus bernafas menggunakan peparu dan perlu mengambil oksigen di permukaan udara", "Ikan paus ingin menghalau burung", "Ikan paus terlalu panas di dalam laut"], c: 1 },
-        { q: "Satu penyiasatan mendapati kulat tumbuh dengan cepat di atas roti yang lembap berbanding roti yang kering. Berikan inferens.", o: ["Kulat takut akan roti kering", "Mikroorganisma memerlukan air/kelembapan untuk membiak dan hidup", "Roti lembap mengandungi lebih banyak gula", "Kulat suka berenang"], c: 1 },
-        { q: "Ramalkan apa yang berlaku jika kita menyentuh bahagian bawah kuali yang sedang digunakan untuk memasak tanpa alas.", o: ["Tangan kita akan berasa sejuk", "Tangan kita akan melecur kerana kuali ialah konduktor haba yang mengalirkan haba", "Kuali akan pecah", "Tiada apa-apa yang berlaku"], c: 1 },
-        { q: "Burung hijrah terbang berkumpul dalam kumpulan yang besar dari kawasan utara ke kawasan selatan pada bulan November. Inferenskan.", o: ["Burung-burung itu ingin melancong bersama", "Burung berhijrah untuk melarikan diri daripada musim sejuk dan mencari sumber makanan", "Burung sesat jalan", "Burung sedang menyertai pertandingan terbang"], c: 1 },
-        { q: "Sebiji buah mangga jatuh dari pokok terus ke arah tanah bawah, bukan melayang ke langit. Kenapa?", o: ["Buah mangga terlalu berat", "Disebabkan oleh tindakan daya tarikan graviti bumi", "Angin bertiup ke bawah sahaja", "Pokok menolak buah itu ke bawah"], c: 1 },
-        { q: "Ramalkan status hidupan akuatik di dalam sungai sekiranya sebuah kilang membuang sisa toksik asid pekat ke dalam sungai tersebut tanpa dirawat.", o: ["Hidupan akuatik akan membiak dengan cepat", "Banyak hidupan akuatik akan mati akibat pencemaran dan perubahan pH air sungai", "Ikan akan bertukar menjadi kebal", "Air sungai akan bertukar menjadi air sirap yang manis"], c: 1 }
+        // === TAHAP 1 (25 SOALAN) ===
+        { t: 1, q: "Pokok P mendapat air tetapi diletakkan di dalam kotak hitam yang gelap. Selepas seminggu, daunnya kuning. Apakah inferens anda?", o: ["Pokok tidak mendapat cahaya matahari untuk buat makanan", "Pokok terlalu banyak mendapat udara", "Kotak hitam itu beracun", "Pokok tidak dipotong daunnya"], c: 0 },
+        { t: 1, q: "Seketul ais diletakkan di atas meja makmal. Selepas 10 minit, ia bertukar menjadi air. Apakah proses yang berlaku?", o: ["Peleburan akibat menerima haba", "Pembekuan akibat kehilangan haba", "Penyubliman cecair", "Kondensasi udara"], c: 0 },
+        { t: 1, q: "Akar sepasang pokok herba dipotong, kemudian pokok itu ditanam semula ke dalam tanah. Selepas 3 hari, pokok itu layu dan mati. Berikan inferens.", o: ["Pokok mati kerana tiada daun", "Akar penting untuk menyerap air dan nutrien dari tanah", "Tanah itu terlalu kering", "Pokok layu sebab terkejut"], c: 1 },
+        { t: 1, q: "Ramalkan warna kertas litmus biru apabila dimasukkan ke dalam jus limau nipis.", o: ["Kekal warna biru", "Bertukar menjadi warna merah", "Bertukar menjadi warna hijau", "Menjadi putih lutsinar"], c: 1 },
+        { t: 1, q: "Sudu besi dan sudu plastik diletakkan di dalam secawan air panas. Selepas 3 minit, sudu besi terasa sangat panas tetapi sudu plastik tidak. Kenapa?", o: ["Besi ialah konduktor haba yang baik, plastik ialah penebat haba", "Plastik menyerap haba lebih cepat daripada besi", "Sudu besi saiznya lebih besar", "Air panas hanya menyukai sudu besi"], c: 0 },
+        { t: 1, q: "Sebuah kereta mainan bergerak lebih jauh di atas lantai jubin berbanding di atas permaidani berbulu. Berikan inferens.", o: ["Lantai jubin mempunyai daya geseran yang lebih rendah", "Permaidani tiada graviti", "Kereta mainan tidak suka permaidani", "Lantai jubin menolak kereta dengan magnet"], c: 0 },
+        { t: 1, q: "Pokok semalu menguncupkan daunnya apabila disentuh dengan jari. Apakah inferens bagi tindakan ini?", o: ["Pokok semalu sedang tidur", "Pokok semalu bergerak balas terhadap rangsangan untuk melindungi diri", "Daun pokok semalu sangat rapuh", "Pokok semalu tidak suka disentuh"], c: 1 },
+        { t: 1, q: "Kain tuala menyerap air dengan banyak, manakala kain sutera hanya menyerap sedikit air. Apakah inferens anda?", o: ["Kain tuala mempunyai keupayaan menyerap air yang lebih tinggi", "Kain sutera kalis air sepenuhnya", "Kain tuala diperbuat daripada besi", "Kain sutera tidak mempunyai benang"], c: 0 },
+        { t: 1, q: "Apabila cuka dititiskan ke atas kapur tulis, buih-buih gas terhasil dengan cepat. Apakah inferens anda?", o: ["Tindak balas kimia antara asid (cuka) dan kalsium karbonat (kapur) membebaskan gas", "Kapur tulis itu sedang mencair", "Cuka itu sebenarnya air panas", "Kapur tulis mengandungi sabun"], c: 0 },
+        { t: 1, q: "Ramalkan rasa sejenis buah sekiranya ia menukarkan kertas litmus merah menjadi biru.", o: ["Rasanya sangat masam", "Rasanya pahit atau beralkali (seperti sabun)", "Rasanya tawar", "Rasanya pedas"], c: 1 },
+        { t: 1, q: "Apabila sebatang rod magnet didekatkan dengan sekumpulan paku besi, paku-paku itu melekat pada hujung magnet. Berikan inferens.", o: ["Hujung magnet (kutub) mempunyai daya magnet yang paling kuat", "Paku besi mengandungi gam", "Magnet itu sangat melekit", "Paku besi menolak magnet"], c: 0 },
+        { t: 1, q: "Satu blok kayu dan satu blok besi yang sama saiz dimasukkan ke dalam air. Blok kayu terapung, manakala blok besi tenggelam. Berikan inferens.", o: ["Kayu lebih tumpat daripada air, besi kurang tumpat", "Kayu kurang tumpat daripada air, manakala besi lebih tumpat daripada air", "Besi lebih berat daripada kayu", "Kayu mempunyai magnet udara"], c: 1 },
+        { t: 1, q: "Ramalkan rasa cecair yang mempunyai nilai pH 7.", o: ["Sangat masam", "Pahit", "Tawar / Tiada rasa (Neutral)", "Manis melebih-lebih"], c: 2 },
+        { t: 1, q: "Satu penyiasatan mendapati kulat tumbuh dengan cepat di atas roti yang lembap berbanding roti yang kering. Berikan inferens.", o: ["Kulat takut akan roti kering", "Mikroorganisma memerlukan air/kelembapan untuk membiak dan hidup", "Roti lembap mengandungi lebih banyak gula", "Kulat suka berenang"], c: 1 },
+        { t: 1, q: "Gigi taring harimau sangat panjang dan tajam berbanding gigi taring lembu. Berikan inferens.", o: ["Harimau suka menakutkan haiwan lain", "Harimau ialah karnivor yang memerlukan gigi taring untuk mengoyakkan daging", "Lembu tidak mempunyai gigi langsung", "Gigi harimau jarang digosok"], c: 1 },
+        { t: 1, q: "Ramalkan apa yang berlaku kepada sebatang klip kertas apabila diletakkan berhampiran dengan magnet.", o: ["Klip kertas akan menolak magnet", "Klip kertas akan ditarik ke arah magnet", "Klip kertas akan cair", "Klip kertas bertukar warna"], c: 1 },
+        { t: 1, q: "Dua biji pasu mengandungi anak pokok. Pasu A disiram hari-hari, Pasu B tidak disiram langsung. Selepas seminggu Pasu B mati. Apakah inferensnya?", o: ["Tumbuhan memerlukan air untuk terus hidup", "Tumbuhan Pasu B tidak suka pasunya", "Pasu A diletakkan di tempat gelap", "Tumbuhan memerlukan tanah yang mahal"], c: 0 },
+        { t: 1, q: "Sebiji sauh besi kapal jatuh ke dalam laut lalu tenggelam ke dasar. Inferenskan ciri sauh tersebut.", o: ["Sauh besi kurang tumpat daripada air laut", "Sauh besi lebih tumpat daripada air laut", "Sauh besi diperbuat daripada kayu ringan", "Laut menolak sauh itu ke bawah"], c: 1 },
+        { t: 1, q: "Ramalkan keadaan bayang-bayang sebatang pokok jika lampu suluh dimatikan sepenuhnya di dalam bilik yang gelap.", o: ["Bayang-bayang menjadi besar", "Bayang-bayang menjadi kabur", "Tiada bayang-bayang yang terbentuk", "Bayang-bayang bertukar putih"], c: 2 },
+        { t: 1, q: "Seorang murid cuba menarik dua buah kereta mainan menggunakan magnet. Kereta A melekat, Kereta B tidak melekat. Apakah inferens tentang Kereta B?", o: ["Kereta B diperbuat daripada bahan bukan magnet seperti plastik", "Kereta B baterinya habis", "Kereta B terlalu laju", "Kereta B suka magnet tersebut"], c: 0 },
+        { t: 1, q: "Pemerhatian mendapati seekor katak boleh hidup di darat dan di dalam air. Ramalkan organ pernafasan katak.", o: ["Hanya mempunyai peparu sahaja", "Mempunyai peparu dan kulit lembap", "Bernafas guna insang sahaja", "Bernafas menggunakan ekor"], c: 1 },
+        { t: 1, q: "Satu objek diletakkan di bawah cahaya lampu dan menghasilkan bayang-bayang yang sangat jelas dan gelap di dinding. Inferenskan sifat objek itu.", o: ["Objek itu adalah lutsinar", "Objek itu adalah legap (tidak membenarkan cahaya menembusinya)", "Objek itu diperbuat daripada cermin", "Objek itu mengeluarkan cahaya sendiri"], c: 1 },
+        { t: 1, q: "Ramalkan apakah yang akan berlaku sekiranya kita membalut sebatang pokok hidup dengan plastik lutsinar yang kedap udara selama sebulan.", o: ["Pokok akan berbuah lebat", "Pokok akan mati kerana kekurangan udara/karbon dioksida", "Pokok akan membesar dua kali ganda", "Plastik akan bertukar menjadi daun"], c: 1 },
+        { t: 1, q: "Sebuah payung diperbuat daripada kain nilon sintetik. Murid yang menggunakannya di bawah hujan tidak basah. Berikan inferens.", o: ["Kain nilon sintetik bersifat menyerap air", "Kain nilon sintetik bersifat kalis air", "Hujan tidak menyentuh payung", "Payung mengandungi pemanas"], c: 1 },
+        { t: 1, q: "Pokok kaktus boleh hidup subur di gurun pasir walaupun jarang menerima air hujan. Berikan inferens ciri pokok ini.", o: ["Kaktus mempunyai daun yang sangat besar", "Kaktus mempunyai batang yang boleh menyimpan air dan akar yang panjang", "Kaktus tidak memerlukan air langsung untuk hidup", "Kaktus diperbuat daripada plastik"], c: 1 },
+
+        // === TAHAP 2 (25 SOALAN) ===
+        { t: 2, q: "Dua biji ragi dimasukkan ke dalam air suam berisi gula. Selepas 15 minit, belon di atas botol mengembang. Ramalkan jika gula digantikan dengan garam.", o: ["Belon tetap berkembang besar", "Belon tidak berkembang kerana ragi memerlukan gula untuk aktif", "Botol akan pecah", "Ragi akan membiak dua kali ganda"], c: 1 },
+        { t: 2, q: "Seorang murid memakai baju sukan berwarna hitam di padang sekolah pada waktu tengah hari yang terik. Dia terasa sangat panas. Kenapa?", o: ["Warna hitam memantulkan haba matahari", "Warna hitam menyerap haba dengan baik", "Baju hitam kainnya tebal", "Baju hitam menghalang angin bertiup"], c: 1 },
+        { t: 2, q: "Ramalkan apa yang berlaku kepada haiwan di bumi jika semua tumbuhan di dunia ini mati tiba-tiba.", o: ["Haiwan akan makan tanah", "Haiwan akan mati kerana kehilangan sumber makanan dan oksigen", "Haiwan karnivor akan hidup selamanya", "Haiwan akan bertukar menjadi tumbuhan"], c: 1 },
+        { t: 2, q: "Satu eksperimen menunjukkan mentol menyala lebih terang apabila bilangan sel kering ditambah. Ramalkan jika kita menambah 5 biji mentol tanpa menambah sel kering.", o: ["Mentol menyala semakin malap", "Mentol menyala semakin terang", "Sel kering akan meletup", "Litar akan terbakar"], c: 0 },
+        { t: 2, q: "Dua ekor tikus diletakkan di dalam sebuah bekas kedap udara yang ditutup rapat. Selepas 2 jam, tikus-tikus itu mati. Apakah inferensnya?", o: ["Tikus mati kekurangan makanan", "Tikus mati kerana kehabisan oksigen untuk bernafas", "Bekas itu terlalu sempit", "Tikus bergaduh sesama sendiri"], c: 1 },
+        { t: 2, q: "Paku besi dibiarkan di bawah hujan selama seminggu lalu bertukar warna menjadi perang kemerahan. Apakah inferens anda?", o: ["Paku telah melebur", "Paku telah mengalami pengaratan akibat kehadiran air dan oksigen", "Paku dicat oleh seseorang", "Paku bertukar menjadi tembaga"], c: 1 },
+        { t: 2, q: "Seekor haiwan mempunyai bulu yang sangat tebal dan lapisan lemak yang tebal di bawah kulitnya. Ramalkan di manakah habitat semula jadi haiwan ini.", o: ["Kawasan gurun pasir yang kering", "Kawasan kutub yang sangat sejuk", "Hutan hujan tropika", "Kawasan paya bakau"], c: 1 },
+        { t: 2, q: "Pemerhatian menunjukkan air laut semakin berkurangan di kawasan pantai sebelum gelombang tsunami gergasi datang. Ramalkan apa yang patut dilakukan penduduk pantai.", o: ["Pergi mengumpul ikan yang terdampar", "Lari bertindak segera ke kawasan yang lebih tinggi dan selamat", "Duduk di pantai mengambil gambar", "Masuk ke dalam bot masing-masing"], c: 1 },
+        { t: 2, q: "Air di dalam gelas yang berisi ais mempunyai titisan air di bahagian luar gelas. Dari mana datangnya air itu?", o: ["Air bocor dari dalam gelas", "Kondensasi wap air di udara apabila menyentuh permukaan gelas yang sejuk", "Ais melimpah keluar", "Udara bertukar menjadi ais"], c: 1 },
+        { t: 2, q: "Sebiji bola tenis dan seketul batu bata dilepaskan pada ketinggian yang sama. Batu bata mencecah tanah dahulu. Apakah inferensnya?", o: ["Batu bata ditarik oleh graviti lebih kuat kerana jisimnya lebih besar", "Bola tenis melayang sendiri", "Batu bata bergerak aktif", "Bumi tidak suka bola tenis"], c: 0 },
+        { t: 2, q: "Satu penyiasatan mendapati yis tidak berkembang apabila diletakkan di dalam air yang mendidih. Berikan inferens.", o: ["Air mendidih terlalu manis", "Suhu yang terlalu tinggi telah membunuh mikroorganisma (yis)", "Yis bertukar menjadi tepung", "Yis melarikan diri"], c: 1 },
+        { t: 2, q: "Ramalkan apa yang berlaku kepada bayang-bayang sebatang tiang jika matahari berada tepat di atas kepala pada jam 12 tengah hari.", o: ["Bayang-bayang menjadi sangat panjang ke arah barat", "Bayang-bayang menjadi paling pendek atau berada tepat di bawah tiang", "Tiada bayang-bayang langsung di dunia", "Bayang-bayang bertukar warna hijau"], c: 1 },
+        { t: 2, q: "Seutas tali getah ditarik panjang lalu dilepaskan. Ia kembali ke bentuk asal. Apakah sifat bahan ini?", o: ["Kekenyalan", "Kerapuhan", "Konduktor", "Ketelusan"], c: 0 },
+        { t: 2, q: "Tumbuhan X mempunyai buah yang berbulu halus, ringan, dan mempunyai ruang udara di dalamnya. Ramalkan cara agen pencaran buah ini.", o: ["Melalui haiwan", "Melalui air", "Melalui angin", "Mekanisme letupan"], c: 2 },
+        { t: 2, q: "Satu eksperimen menunjukkan bahawa minyak yang dituangkan di atas permukaan air di dalam akuarium menyebabkan ikan mati selepas beberapa jam. Inferenskan.", o: ["Lapisan minyak menghalang oksigen dari udara larut ke dalam air", "Ikan makan minyak tersebut", "Minyak menurunkan suhu air", "Ikan menjadi terlalu licin"], c: 0 },
+        { t: 2, q: "Planet Utarid mengambil masa paling singkat untuk mengelilingi Matahari berbanding planet lain. Kenapa?", o: ["Sebab Utarid planet paling besar", "Sebab orbit Utarid paling dekat dengan Matahari", "Sebab Utarid bergerak paling laju", "Sebab Utarid mempunyai banyak bulan"], c: 1 },
+        { t: 2, q: "Ramalkan apa yang berlaku kepada tempoh ayunan satu bandul jika panjang tali bandul itu ditambah.", o: ["Tempoh ayunan menjadi semakin cepat", "Tempoh ayunan menjadi semakin perlahan / panjang", "Bandul akan berhenti serta-merta", "Tali bandul akan putus secara automatik"], c: 1 },
+        { t: 2, q: "Sebiji botol kaca yang diisi penuh dengan air dipasang penutup dengan ketat, lalu diletakkan di dalam bahagian sejuk beku. Keesokan harinya, botol itu pecah. Inferenskan.", o: ["Air mengecut apabila membeku", "Air mengembang saiznya apabila bertukar menjadi ais", "Kaca menjadi lembut dalam peti sejuk", "Peti sejuk menolak botol tersebut"], c: 1 },
+        { t: 2, q: "Seorang pekebun mendapati pokok herba yang ditanam rapat-rapat tumbuh tinggi dan kurus berbanding pokok yang ditanam jarak-jarak. Kenapa?", o: ["Pokok bersaing hebat untuk mendapatkan cahaya matahari", "Pokok yang rapat saling berkongsi daun", "Pekebun lupa menyiram pokok yang rapat", "Pokok kurus lebih sihat"], c: 0 },
+        { t: 2, q: "Ramalkan apakah yang berlaku kepada populasi beluncas jika bilangan burung (pemangsa beluncas) di taman itu berkurangan secara mendadak.", o: ["Populasi beluncas akan berkurangan", "Populasi beluncas akan meningkat dengan cepat", "Beluncas akan bertukar menjadi burung", "Beluncas akan berpindah ke taman lain"], c: 1 },
+        { t: 2, q: "Satu mentol dalam litar selari terbakar, tetapi mentol yang lain masih menyala. Mengapa situasi ini berlaku?", o: ["Sebab tenaga elektrik melompat", "Sebab dalam litar selari, arus elektrik mempunyai lebih daripada satu laluan", "Sebab mentol lain menggunakan bateri berbeza", "Sebab mentol yang terbakar itu tidak penting"], c: 1 },
+        { t: 2, q: "Sebiji belon yang ditiup diletakkan di bawah cahaya matahari terik. Selepas 30 minit, belon itu meletup. Kenapa?", o: ["Udara di dalam belon mengecut", "Udara di dalam belon menerima haba dan mengembang", "Cahaya matahari memotong getah belon", "Belon menjadi terlalu sejuk"], c: 1 },
+        { t: 2, q: "Satu kawasan hutan telah ditebang habis untuk pembinaan perumahan. Ramalkan kesan jangka panjang kepada alam sekitar kawasan itu.", o: ["Suhu kawasan sekitar menjadi lebih sejuk", "Kejadian banjir kilat dan tanah runtuh mudah berlaku", "Bilangan haiwan liar bertambah", "Udara menjadi semakin segar"], c: 1 },
+        { t: 2, q: "Dua buah bekas, satu berwarna putih dan satu berwarna hitam diisi air dengan suhu yang sama, lalu dijemur. Selepas 1 jam, air dalam bekas hitam lebih panas. Kenapa?", o: ["Permukaan hitam menyerap haba lebih baik daripada permukaan putih", "Bekas putih memancarkan haba ke dalam air", "Bekas hitam diperbuat daripada api", "Bekas putih bocor haba"], c: 0 },
+        { t: 2, q: "Satu rantaian makanan: Padi ➔ Belalang ➔ Katak ➔ Ular. Ramalkan apa yang berlaku kepada populasi belalang jika semua katak ditangkap.", o: ["Populasi belalang akan berkurangan", "Populasi belalang akan meningkat", "Belalang akan mula makan ular", "Belalang akan bertukar menjadi katak"], c: 1 }
     ];
 
     let urutanKes = [];
     let indeksSemasa = 0;
     let markahMata = 0;
 
-    function mulaGame() {
+    function mulaGame(tahap) {
         document.getElementById("start-screen").style.display = "none";
         document.getElementById("game-screen").style.display = "block";
         
-        // HELAH AMBIL 20 RAWAK DARIPADA 50 SOALAN
-        // 1. Salin bank data -> 2. Rawakkan susunan -> 3. Potong ambil 20 teratas sahaja
-        urutanKes = [...bankKes].sort(() => Math.random() - 0.5).slice(0, 20);
+        let soalanDitapis = [];
+        if (tahap === 1) {
+            // Tapis soalan Tahap 1 sahaja
+            soalanDitapis = bankKes.filter(item => item.t === 1);
+        } else if (tahap === 2) {
+            // Tapis soalan Tahap 2 sahaja
+            soalanDitapis = bankKes.filter(item => item.t === 2);
+        } else {
+            // Campuran semua
+            soalanDitapis = [...bankKes];
+        }
+
+        // Rawakkan dan potong ambil maksimum 20 soalan sahaja
+        urutanKes = soalanDitapis.sort(() => Math.random() - 0.5).slice(0, 20);
         
+        // Sekiranya soalan ditapis kurang dari 20 (contohnya esok-esok anda nak buat bank kecil), ia akan ambil baki maksimum yang ada.
         indeksSemasa = 0;
         markahMata = 0;
         paparKes();
@@ -216,7 +254,7 @@
         document.getElementById("feedback-txt").innerText = "";
         
         let dataKes = urutanKes[indeksSemasa];
-        document.getElementById("progress-txt").innerText = `${indeksSemasa + 1}/20`;
+        document.getElementById("progress-txt").innerText = `${indeksSemasa + 1}/${urutanKes.length}`;
         document.getElementById("score-txt").innerText = markahMata;
         document.getElementById("case-text").innerText = dataKes.q;
 
@@ -236,7 +274,6 @@
         let dataKes = urutanKes[indeksSemasa];
         let semuaButang = document.querySelectorAll(".btn-opt");
         
-        // Kunci semua butang daripada ditekan lagi
         semuaButang.forEach(b => b.disabled = true);
 
         if (pilihanId === dataKes.c) {
@@ -245,14 +282,13 @@
             elemenButang.style.background = "#c8e6c9";
             elemenButang.style.borderColor = "#2e7d32";
             elemenButang.style.color = "#2e7d32";
-            document.getElementById("feedback-txt").innerText = "✅ KES DISELESAIKAN! Inferens/Ramalan anda tepat.";
+            document.getElementById("feedback-txt").innerText = "✅ KES DISELESAIKAN! Jawapan anda tepat.";
             document.getElementById("feedback-txt").style.color = "#2e7d32";
         } else {
             elemenButang.style.background = "#ffcdd2";
             elemenButang.style.borderColor = "#c62828";
             elemenButang.style.color = "#c62828";
             
-            // Tunjukkan jawapan betul
             semuaButang[dataKes.c].style.background = "#c8e6c9";
             semuaButang[dataKes.c].style.borderColor = "#2e7d32";
             semuaButang[dataKes.c].style.color = "#2e7d32";
@@ -271,7 +307,7 @@
         } else {
             document.getElementById("game-screen").style.display = "none";
             document.getElementById("result-screen").style.display = "block";
-            document.getElementById("final-score").innerText = `${markahMata}/20`;
+            document.getElementById("final-score").innerText = `${markahMata}/${urutanKes.length}`;
         }
     }
 </script>
