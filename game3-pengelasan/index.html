@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pengelasan Gergasi - Zon Main Sains</title>
+    <style>
+        body {
+            font-family: 'Comic Sans MS', sans-serif;
+            background-color: #e8f5e9;
+            margin: 0;
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .game-container {
+            background: white;
+            width: 100%;
+            max-width: 600px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            padding: 25px;
+            border: 4px solid #2e7d32;
+            text-align: center;
+        }
+        .score-board {
+            display: flex;
+            justify-content: space-between;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #2e7d32;
+            margin-bottom: 20px;
+        }
+        .display-box {
+            background: #f1f8e9;
+            border: 3px dashed #81c784;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 25px;
+        }
+        .item-emoji {
+            font-size: 5rem;
+            margin-bottom: 10px;
+            animation: pop 0.3s ease;
+        }
+        .item-name {
+            font-size: 1.6rem;
+            font-weight: bold;
+            color: #1b5e20;
+        }
+        .btn-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        .cat-btn {
+            background: white;
+            border: 3px solid #c8e6c9;
+            padding: 18px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: 0.2s;
+            color: #2e7d32;
+        }
+        .cat-btn:hover {
+            background: #c8e6c9;
+            color: #1b5e20;
+        }
+        .feedback-text {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-top: 20px;
+            min-height: 30px;
+        }
+        .btn-back {
+            background: #757575;
+            color: white;
+            text-decoration: none;
+            padding: 12px 25px;
+            border-radius: 10px;
+            display: inline-block;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+        @keyframes pop {
+            0% { transform: scale(0.7); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+
+<div class="game-container">
+    <!-- START SCREEN -->
+    <div id="start-screen">
+        <div style="font-size: 5rem;">🐸</div>
+        <h1 style="color: #2e7d32;">Pengelasan Gergasi Sains</h1>
+        <p style="color: #555; font-size: 1.1rem; max-width: 400px; margin: 0 auto 20px auto;">
+            Uji kepantasan anda mengisih benda, haiwan dan tumbuhan mengikut kategori sains yang betul!
+        </p>
+        <button onclick="mulaGame()" style="background: #2e7d32; color: white; border: none; padding: 15px 35px; font-size: 1.2rem; font-weight: bold; border-radius: 12px; cursor: pointer; box-shadow: 0 5px 10px rgba(0,0,0,0.15);">MULA MENGISIH ➔</button>
+        <br>
+        <a href="../index.html" class="btn-back">⬅️ KEMBALI</a>
+    </div>
+
+    <!-- GAMEPLAY SCREEN -->
+    <div id="game-screen" style="display: none;">
+        <div class="score-board">
+            <div>Mata: <span id="score-display">0</span> ⭐</div>
+            <div>Baki: <span id="round-display">1/10</span></div>
+        </div>
+
+        <div class="display-box">
+            <div class="item-emoji" id="current-emoji">🐱</div>
+            <div class="item-name" id="current-name">Kucing</div>
+        </div>
+
+        <h3 id="instruction-text" style="color: #555; margin-bottom: 15px;">Pilih kumpulan yang betul:</h3>
+        <div class="btn-grid" id="buttons-area"></div>
+        <div class="feedback-text" id="feedback"></div>
+    </div>
+
+    <!-- RESULT SCREEN -->
+    <div id="result-screen" style="display: none;">
+        <div style="font-size: 5rem;">🏆</div>
+        <h2>Isihan Selesai!</h2>
+        <p style="font-size: 1.2rem; color: #555;">Tahniah, anda memperoleh markah:</p>
+        <h1 style="color: #2e7d32; font-size: 3.5rem;" id="final-score">0/10</h1>
+        <a href="../index.html" class="btn-back">⬅️ KEMBALI KE MENU UTAMA</a>
+    </div>
+</div>
+
+<script>
+    // Bank data mengandungi beberapa set topik pengelasan
+    const bankData = [
+        { name: "Kucing", emoji: "🐱", cat: "Vertebrata (Bertulang Belakang)" },
+        { name: "Cacing Tanah", emoji: "🪱", cat: "Invertebrata (Tiada Tulang Belakang)" },
+        { name: "Ikan Emas", emoji: "🐟", cat: "Vertebrata (Bertulang Belakang)" },
+        { name: "Klip Kertas", emoji: "📎", cat: "Kalis Air" },
+        { name: "Sapu Tangan", emoji: "🧻", cat: "Menyerap Air" },
+        { name: "Tuala Mandi", emoji: "🧼", cat: "Menyerap Air" },
+        { name: "Siput Babi", emoji: "🐌", cat: "Invertebrata (Tiada Tulang Belakang)" },
+        { name: "Pokok Bunga Raya", emoji: "🌺", cat: "Tumbuhan Berbunga" },
+        { name: "Cendawan", emoji: "🍄", cat: "Tumbuhan Tidak Berbunga" },
+        { name: "Payung Plastik", emoji: "☂️", cat: "Kalis Air" }
+    ];
+
+    // Senarai semua kategori unik yang wujud untuk dibuat butang pilihan
+    const senaraiKategori = [
+        "Vertebrata (Bertulang Belakang)",
+        "Invertebrata (Tiada Tulang Belakang)",
+        "Menyerap Air",
+        "Kalis Air",
+        "Tumbuhan Berbunga",
+        "Tumbuhan Tidak Berbunga"
+    ];
+
+    let itemsMain = [];
+    let indeksSekarang = 0;
+    let markah = 0;
+    let bolehJawab = true;
+
+    function mulaGame() {
+        document.getElementById("start-screen").style.display = "none";
+        document.getElementById("game-screen").style.display = "block";
+        
+        // Rawakkan item supaya susunan berbeza setiap kali main
+        itemsMain = [...bankData].sort(() => Math.random() - 0.5);
+        indeksSekarang = 0;
+        markah = 0;
+        
+        paparItem();
+    }
+
+    function paparItem() {
+        bolehJawab = true;
+        document.getElementById("feedback").innerText = "";
+        
+        let item = itemsMain[indeksSekarang];
+        document.getElementById("round-display").innerText = `${indeksSekarang + 1}/${itemsMain.length}`;
+        document.getElementById("current-emoji").innerText = item.emoji;
+        document.getElementById("current-name").innerText = item.name;
+
+        // Jana butang jawapan (Ambil kategori betul + 3 kategori salah secara rawak)
+        let jawapanBetul = item.cat;
+        let pilihanLain = senaraiKategori.filter(c => c !== jawapanBetul).sort(() => Math.random() - 0.5).slice(0, 3);
+        let pilihanSemua = [jawapanBetul, ...pilihanLain].sort(() => Math.random() - 0.5);
+
+        let area = document.getElementById("buttons-area");
+        area.innerHTML = "";
+
+        pilihanSemua.forEach(cat => {
+            let btn = document.createElement("button");
+            btn.className = "cat-btn";
+            btn.innerText = cat;
+            btn.onclick = () => semakIsihan(cat, btn);
+            area.appendChild(btn);
+        });
+    }
+
+    function semakIsihan(pilihan, elemen) {
+        if (!bolehJawab) return;
+        bolehJawab = false;
+
+        let item = itemsMain[indeksSekarang];
+        
+        if (pilihan === item.cat) {
+            markah++;
+            document.getElementById("score-display").innerText = markah;
+            elemen.style.background = "#c8e6c9";
+            elemen.style.borderColor = "#2e7d32";
+            document.getElementById("feedback").innerText = "✅ TEPAT SEKALI!";
+            document.getElementById("feedback").style.color = "#2e7d32";
+        } else {
+            elemen.style.background = "#ffcdd2";
+            elemen.style.borderColor = "#c62828";
+            document.getElementById("feedback").innerText = `❌ Salah! Kategori betul: ${item.cat}`;
+            document.getElementById("feedback").style.color = "#c62828";
+        }
+
+        // Tunggu 1.5 saat sebelum pergi ke item seterusnya supaya murid sempat baca jawapan betul
+        setTimeout(() => {
+            indeksSekarang++;
+            if (indeksSekarang < itemsMain.length) {
+                paparItem();
+            } else {
+                tamatGame();
+            }
+        }, 1500);
+    }
+
+    function tamatGame() {
+        document.getElementById("game-screen").style.display = "none";
+        document.getElementById("result-screen").style.display = "block";
+        document.getElementById("final-score").innerText = `${markah}/${itemsMain.length}`;
+    }
+</script>
+
+</body>
+</html>
