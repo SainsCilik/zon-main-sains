@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detektif Sains - Zon Main Sains</title>
+    <style>
+        body {
+            font-family: 'Comic Sans MS', sans-serif;
+            background-color: #e8f5e9;
+            margin: 0;
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .game-container {
+            background: white;
+            width: 100%;
+            max-width: 650px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            padding: 25px;
+            border: 4px solid #2e7d32;
+            text-align: center;
+        }
+        .badge {
+            background: #2e7d32;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+        .case-box {
+            background: #f1f8e9;
+            padding: 20px;
+            border-radius: 15px;
+            border: 2px dashed #81c784;
+            margin-bottom: 20px;
+            font-size: 1.15rem;
+            color: #1b5e20;
+            line-height: 1.5;
+            font-weight: bold;
+        }
+        .visual-emoji {
+            font-size: 4rem;
+            margin: 15px 0;
+        }
+        .option-btn {
+            display: block;
+            width: 100%;
+            background: white;
+            border: 3px solid #c8e6c9;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+            text-align: left;
+            color: #333;
+        }
+        .option-btn:hover {
+            background: #f1f8e9;
+            border-color: #a5d6a7;
+        }
+        .score-text {
+            font-size: 1.2rem;
+            color: #2e7d32;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+        .feedback {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-top: 15px;
+            min-height: 30px;
+        }
+        .btn-next {
+            background: #2e7d32;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 10px;
+            cursor: pointer;
+            margin-top: 15px;
+            display: none;
+            width: 100%;
+        }
+        .btn-next:hover { background: #1b5e20; }
+        .btn-back {
+            background: #757575;
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            display: inline-block;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="game-container">
+    <div id="game-screen">
+        <div class="badge" id="case-number">KES MISTERI #1</div>
+        <div class="score-text">Mata Detektif: <span id="current-score">0</span> ⭐️</div>
+        
+        <div class="visual-emoji" id="case-emoji">🌱</div>
+        <div class="case-box" id="case-text">Memuatkan kes...</div>
+        
+        <div id="options-area"></div>
+        <div class="feedback" id="feedback-text"></div>
+        <button class="btn-next" id="next-btn" onclick="nextCase()">KES SETERUSNYA ➔</button>
+    </div>
+
+    <div id="result-screen" style="display:none;">
+        <div class="visual-emoji">🏆</div>
+        <h2>Siasatan Selesai, Detektif!</h2>
+        <p style="font-size: 1.2rem;">Anda berjaya menyelesaikan kes dengan markah:</p>
+        <h1 style="color: #2e7d32; font-size: 3rem;" id="final-score">0/5</h1>
+        <h3 id="rank-text">Pangkat: Detektif Novis</h3>
+        <a href="../index.html" class="btn-back">⬅️ KEMBALI KE MENU UTAMA</a>
+    </div>
+</div>
+
+<script>
+    const senaraiKes = [
+        {
+            text: "Kes: Encik Ali mendapati rumput di bawah sebiji batu besar di tamannya bertukar menjadi warna kuning dan layu selepas seminggu. Apakah inferens anda?",
+            emoji: "🪨",
+            options: [
+                "Rumput itu tidak mendapat cahaya matahari.",
+                "Rumput itu dipijak oleh katak.",
+                "Batu itu mengeluarkan racun.",
+                "Rumput bertukar warna mengikut warna batu."
+            ],
+            correct: 0,
+            explain: "Betul! Rumput memerlukan cahaya matahari untuk fotosintesis (membuat makanan)."
+        },
+        {
+            text: "Kes: Sebuah bekas berisi seekor lipas diletakkan di dalam makmal. Selepas badannya disapu minyak gred tebal pada bahagian abdomen (perut), lipas itu mati. Mengapa?",
+            emoji: "🪳",
+            options: [
+                "Lipas itu mati kelaparan.",
+                "Minyak itu terlalu sejuk.",
+                "Spirakel (lubang pernafasan) pada abdomen tersumbat.",
+                "Lipas tidak suka bau minyak."
+            ],
+            correct: 2,
+            explain: "Tepat! Serangga seperti lipas bernafas menggunakan spirakel yang berada di abdomennya."
+        },
+        {
+            text: "Kes: Dua buah cawan berisi air panas diletakkan di atas meja. Cawan A dibalut dengan kain tebal, manakah Cawan B dibiarkan begitu sahaja. Ramalkan apa yang berlaku selepas 20 minit.",
+            emoji: "☕️",
+            options: [
+                "Air dalam Cawan B lebih panas daripada Cawan A.",
+                "Air dalam Cawan A lebih panas daripada Cawan B.",
+                "Kedua-dua cawan mempunyai suhu yang sama.",
+                "Air dalam cawan A akan membeku."
+            ],
+            correct: 1,
+            explain: "Bijak! Kain tebal adalah penbat haba yang melambatkan kehilangan haba daripada air panas."
+        },
+        {
+            text: "Kes: Angkasawan di Bulan mendapati mereka tidak dapat mendengar bunyi letupan batu yang jatuh berhampiran mereka walaupun mereka melihatnya. Apakah sebabnya?",
+            emoji: "🧑‍🚀",
+            options: [
+                "Bulan terlalu jauh dari Bumi.",
+                "Angkasawan memakai topi keledar yang kalis bunyi.",
+                "Bunyi tidak boleh merambat kerana tiada udara (vakum) di Bulan.",
+                "Batu di Bulan tidak menghasilkan bunyi."
+            ],
+            correct: 2,
+            explain: "Terbaik! Bunyi memerlukan medium (seperti udara) untuk bergerak/merambat."
+        },
+        {
+            text: "Kes: Sekumpulan tikus diletakkan di dalam sebuah sangkar besi yang ditutup rapat dengan plastik kedap udara. Sediakan ramalan anda tentang apa yang berlaku selepas 1 jam.",
+            emoji: "🐀",
+            options: [
+                "Tikus akan membesar dengan cepat.",
+                "Tikus akan mati kerana kehabisan oksigen.",
+                "Tikus akan melarikan diri dari sangkar.",
+                "Tiada apa-apa yang berlaku kepada tikus."
+            ],
+            correct: 1,
+            explain: "Tepat sekali! Haiwan memerlukan oksigen daripada udara untuk terus bernafas dan hidup."
+        }
+    ];
+
+    let indexKes = 0;
+    let markah = 0;
+    let answered = false;
+
+    function paparKes() {
+        answered = false;
+        document.getElementById("next-btn").style.display = "none";
+        document.getElementById("feedback-text").innerText = "";
+        
+        let kes = senaraiKes[indexKes];
+        document.getElementById("case-number").innerText = `KES MISTERI #${indexKes + 1} / ${senaraiKes.length}`;
+        document.getElementById("case-emoji").innerText = kes.emoji;
+        document.getElementById("case-text").innerText = kes.text;
+
+        let area = document.getElementById("options-area");
+        area.innerHTML = "";
+
+        kes.options.forEach((opt, idx) => {
+            let btn = document.createElement("button");
+            btn.className = "option-btn";
+            btn.innerText = opt;
+            btn.onclick = () => semakJawapan(idx, btn);
+            area.appendChild(btn);
+        });
+    }
+
+    function semakJawapan(pilihan, elemen) {
+        if (answered) return;
+        answered = true;
+
+        let kes = senaraiKes[indexKes];
+        let semuaButang = document.querySelectorAll(".option-btn");
+
+        if (pilihan === kes.correct) {
+            markah++;
+            document.getElementById("current-score").innerText = markah;
+            elemen.style.background = "#c8e6c9";
+            elemen.style.borderColor = "#2e7d32";
+            document.getElementById("feedback-text").innerText = "✅ " + kes.explain;
+            document.getElementById("feedback-text").style.color = "#2e7d32";
+        } else {
+            elemen.style.background = "#ffcdd2";
+            elemen.style.borderColor = "#c62828";
+            semuaButang[kes.correct].style.background = "#c8e6c9";
+            semuaButang[kes.correct].style.borderColor = "#2e7d32";
+            document.getElementById("feedback-text").innerText = "❌ Kurang tepat! Siasatan menunjukkan jawapan yang betul telah diwarnakan hijau.";
+            document.getElementById("feedback-text").style.color = "#c62828";
+        }
+
+        document.getElementById("next-btn").style.display = "block";
+    }
+
+    function nextCase() {
+        if (indexKes < senaraiKes.length - 1) {
+            indexKes++;
+            paparKes();
+        } else {
+            tunjukKeputusan();
+        }
+    }
+
+    function tunjukKeputusan() {
+        document.getElementById("game-screen").style.display = "none";
+        document.getElementById("result-screen").style.display = "block";
+        document.getElementById("final-score").innerText = `${markah}/${senaraiKes.length}`;
+
+        let rank = document.getElementById("rank-text");
+        if (markah === senaraiKes.length) {
+            rank.innerText = "Pangkat: 👑 DETEKTIF AGUNG SAINS";
+            rank.style.color = "#2e7d32";
+        } else if (markah >= 3) {
+            rank.innerText = "Pangkat: 🕵️‍♂️ DETEKTIF CEKAP";
+            rank.style.color = "#1565c0";
+        } else {
+            rank.innerText = "Pangkat: 🔍 DETEKTIF INTERN (Sila Cuba Lagi!)";
+            rank.style.color = "#c62828";
+        }
+    }
+
+    // Mula Game
+    paparKes();
+</script>
+
+</body>
+</html>
